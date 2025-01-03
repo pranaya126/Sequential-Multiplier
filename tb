@@ -1,0 +1,40 @@
+module bit_seqmulti_tb;
+reg clk;
+reg rst;
+reg start;
+reg [3:0] multiplicand;
+reg [3:0] multiplier;
+wire [7:0] product;
+wire ready;
+bit_seqmulti uut (
+.clk(clk),
+.rst(rst),
+.start(start),
+.multiplicand(multiplicand),
+.multiplier(multiplier),
+.product(product),
+.ready(ready)
+);
+initial begin
+clk = 0;
+forever #5 clk = ~clk;
+end
+initial begin
+rst = 1; start = 0; multiplicand = 0; multiplier = 0;
+#10 rst = 0;
+multiplicand = 4'b0011; multiplier = 4'b0101; start = 1;
+#10 start = 0;
+wait (ready);
+$display("Test Case 1: 3 * 5 = %d", product);
+multiplicand = 4'b0111; multiplier = 4'b0010; start = 1;
+#10 start = 0;
+wait (ready);
+$display("Test Case 2: 7 * 2 = %d", product);
+multiplicand = 4'b1000; multiplier = 4'b1000; start = 1;
+#10 start = 0;
+wait (ready);
+$display("Test Case 3: 8 * 8 = %d", product);
+$finish;
+end
+
+endmodule
